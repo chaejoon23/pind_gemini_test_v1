@@ -1,0 +1,32 @@
+# Web framework
+fastapi==0.115.14
+uvicorn[standard]==0.34.0
+
+# Google AI and cloud services
+google-generativeai==0.8.2
+google-cloud-videointelligence==2.16.2
+googlemaps==4.10.0
+
+# YouTube download and video processing
+yt-dlp==2025.6.30
+numpy==2.3.2
+
+# HTTP requests
+requests==2.32.4
+httpx==0.28.1
+
+# Data processing
+pydantic==2.11.7
+python-multipart==0.0.20
+
+# Environment and logging utilities
+python-dotenv==1.1.1
+python-json-logger==3.3.0
+
+# Testing dependencies
+pytest==8.4.1
+pytest-asyncio==1.1.0
+
+# Type hinting
+typing-extensions==4.12.2
+dotenv==0.9.9
