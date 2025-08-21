@@ -62,7 +62,7 @@ class IntegratedLocationExtractor:
         availability = self.audio_analyzer.check_audio_availability(youtube_url)
 
         # 장소 추출
-        locations = await self.audio_analyzer.extract_locations_from_audio(youtube_url)
+        search_area, locations = await self.audio_analyzer.extract_locations_and_area_from_audio(youtube_url)
 
         # 통계 생성
         stats = self.audio_analyzer.get_analysis_stats(locations)
@@ -169,12 +169,12 @@ class IntegratedLocationExtractor:
 
         start_time = datetime.now()
 
-        # 병렬로 두 분석 실행
-        audio_task = self.audio_analyzer.extract_locations_from_audio(youtube_url)
-        visual_task = self.visual_analyzer.extract_locations_from_frames(youtube_url)
+        # 1. 음성 분석으로 지역 정보와 장소 추출
+        search_area, audio_locations = await self.audio_analyzer.extract_locations_and_area_from_audio(youtube_url)
 
-        audio_locations, visual_locations = await asyncio.gather(
-            audio_task, visual_task
+        # 2. 시각 분석 (추출된 지역 컨텍스트 사용)
+        visual_locations = await self.visual_analyzer.extract_locations_from_frames(
+            youtube_url, country_context=search_area
         )
 
         # 결과 통합 (단순 합치기)
@@ -203,6 +203,7 @@ class IntegratedLocationExtractor:
             "test_type": "audio_plus_visual",
             "youtube_url": youtube_url,
             "processing_time_seconds": processing_time,
+            "search_area": search_area,
             "audio_locations": [loc.to_dict() for loc in audio_locations],
             "visual_locations": [loc.to_dict() for loc in visual_locations],
             "combined_locations": [loc.to_dict() for loc in unique_locations],
